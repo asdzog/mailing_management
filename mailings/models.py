@@ -34,7 +34,7 @@ class Mailing(models.Model):
     title = models.CharField(max_length=50, verbose_name='Название')
     date = models.DateField(verbose_name='Дата', default=timezone.now)
     time = models.TimeField(verbose_name='Время', auto_now_add=True)
-    period = models.CharField(max_length=10, verbose_name='Период', choices=PERIOD_CHOICES, default='еженедельно')
+    period = models.CharField(max_length=30, verbose_name='Период', choices=PERIOD_CHOICES, default='еженедельно')
     status = models.CharField(max_length=10, verbose_name='Статус', choices=STATUS_CHOICES, default='создана')
     clients = models.ManyToManyField(Client, verbose_name='Клиент')
     message = models.ForeignKey(Message, on_delete=models.CASCADE, verbose_name='Письмо')
