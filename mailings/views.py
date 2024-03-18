@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.utils.text import slugify
 from django.views.generic import TemplateView, CreateView, ListView, UpdateView, DeleteView, DetailView
 
 from mailings.forms import MailingForm
@@ -21,9 +22,22 @@ class MailingCreateView(CreateView):
         'title': 'Создание рассылки'
     }
 
+    def form_valid(self, form):
+        if form.is_valid():
+            new_mailing = form.save()
+            new_mailing.slug = slugify(new_mailing.title)
+            new_mailing.save()
+
+        return super().form_valid(form)
+
 
 class MailingListView(ListView):
-    pass
+    model = Mailing
+
+    def get_queryset(self, *args, **kwargs):
+        queryset = super().get_queryset(*args, **kwargs)
+        queryset = queryset.filter(is_active=True)
+        return queryset
 
 
 class MailingUpdateView(UpdateView):
