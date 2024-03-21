@@ -1,0 +1,17 @@
+{% extends 'mailings/base.html' %}
+
+{% block title %} Информация о клиенте {% endblock %}
+
+{% block content %}
+
+<div class="py-4">
+    <h1>{{ object.full_name }}</h1>
+    <p>Email: {{ object.email }}</p>
+    <p>Комментарий: {{ object.comment }} ₽</p>
+    <a class="btn btn-sm btn-danger"
+       href="{% url 'clients:client_list' %}"> Удалить клиента </a>
+    <a class="btn btn-sm btn-success"
+       href="{% url 'clients:client_list' %}"> К списку клиентов </a>
+</div>
+{% endblock %}
+

@@ -1,0 +1,42 @@
+{% extends 'mailings/base.html' %}
+{% block content %}
+<div class="header mx-auto text-center">
+    <h5 class="display-4">{{ title }}</h5>
+</div>
+<div class="col-12 mb-5">
+    <a class="btn btn-outline-primary" href="{% url 'clients:client_create' %}"> Создать клиента </a>
+</div>
+<div class="col-12">
+    <div class="row">
+
+
+        <div class="col-6 mb-3">
+            {% for object in object_list %}
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="my-0 font-weight-normal"> Клиент {{ object.full_name }}</h4>
+                    <p>Email: {{ object.email }} </p>
+                    <a href="{% url 'clients:client_detail' object.pk %}" type="button"
+                       class="btn btn-sm btn-primary "> Подробнее </a>
+                    <a href="{% url 'clients:client_update' object.pk %}" type="button"
+                       class="btn btn-sm btn-warning "> Редактировать </a>
+                    <a href="{% url 'clients:client_delete' object.pk %}" type="button"
+                       class="btn btn-sm btn-danger"> Удалить клиента </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+            <!--
+                        <div class="card-footer">
+                            {% if object.is_activated %}
+                            <p>Действующая</p>
+                            {% else %}
+                            <p>Отменена</p>
+                            {% endif %}
+                        </div>
+            -->
+
+
+    </div>
+</div>
+{% endblock %}
