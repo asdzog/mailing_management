@@ -1,0 +1,52 @@
+{% extends 'mailings/base.html' %}
+{% block content %}
+<div class="header mx-auto text-center">
+    <h5 class="display-4">{{ title }}</h5>
+</div>
+<div class="col-12 mb-5">
+    <a class="btn btn-outline-primary" href="{% url 'mailings:message_create' %}"> Создать письмо </a>
+</div>
+{% for object in object_list %}
+<div class="col-12">
+    <div class="row">
+        <div class="col-6 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="my-0 font-weight-normal"> Письмо (ID № {{ object.pk }})</h3>
+                    <p>Тема письма: {{ object.subject }}</p>
+                    <p>Содержание письма: {{ object.body }}</p>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <a href="{% url 'mailings:message_detail' object.pk %}" type="button"
+                       class="btn btn-sm btn-primary"> Подробнее </a>
+                    <a href="{% url 'mailings:message_update' object.pk %}" type="button"
+                               class="btn btn-sm btn-warning "> Редактировать </a>
+                    <a href="{% url 'mailings:message_delete' object.pk %}" type="button"
+                       class="btn btn-sm btn-danger"> Удалить письмо </a>
+
+                </div>
+
+                <!--
+                <div class="card-body">
+                    <p>с {{ object.start_date }} по {{ object.end_date }}</p>
+                    <p>с периодичностью {{ object.interval }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a href="{% url 'mailings:message_list' %}" type="button"
+                           class="btn btn-sm btn-outline-primary">Подробности</a>
+
+                    </div>
+                    <div class="card-footer">
+                        {% if object.is_activated %}
+                        <p>Действующая</p>
+                        {% else %}
+                        <p>Отменена</p>
+                        {% endif %}
+                    </div>
+                </div>
+                -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}

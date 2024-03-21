@@ -1,0 +1,17 @@
+{% extends 'mailings/base.html' %}
+
+{% block title %} Детали письма {% endblock %}
+
+{% block content %}
+
+<br><h2>Письмо (ID № {{ object.pk }})</h2><br>
+<p>Тема письма: {{ object.subject }}</p><br>
+<h3>Содержание письма:</h3><br>
+<p>{{ object.body }}</p><br>
+<div class="py-4">
+    <a  class="btn btn-sm btn-danger"
+        href="{% url 'mailings:message_delete' object.pk %}"> Удалить письмо </a>
+    <a  class="btn btn-sm btn-success"
+        href="{% url 'mailings:message_list' %}"> К списку писем </a>
+</div>
+{% endblock %}
