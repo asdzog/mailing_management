@@ -1,17 +1,21 @@
 {% extends 'mailings/base.html' %}
 
-{% block title_content %}Главная страница{% endblock %}
-{% block content %}
-<h1><em>Главная страница с рассылками </em></h1>
-{% if user.is_authenticated %}
-<div class="row">
-    <a class="col-4 mt-3 mb-3 btn btn-primary"
-       href="#">Добавить рассылку</a>
-</div>
-{% endif %}
-<div class="row">
-    {% for product in products %}
-        {% include 'catalog/includes/inc_product_card.html' %}
-    {% endfor %}
+{% block title %}
+    Система рассылки сообщений
 {% endblock %}
-</div>
+
+{% block content %}
+    <h1><em>Главная страница с рассылками </em></h1>
+    <div class="row">
+                <a class="col-4 mt-3 mb-3 btn btn-primary"
+                   href="{% url 'mailings:mailing_create' %}">Добавить рассылку</a>
+            </div>
+        <!--  {% if user.is_authenticated %}  -->
+
+        <!--  {% endif %}  -->
+    <div class="row">
+        {% for product in products %}
+            <!-- {% include 'catalog/includes/inc_product_card.html' %} -->
+        {% endfor %}
+    </div>
+{% endblock %}
