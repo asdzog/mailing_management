@@ -1,4 +1,4 @@
-{% extends 'mailing/base.html' %}
+{% extends 'mailings/base.html' %}
 
 {% block content %}
 
@@ -12,12 +12,12 @@
                         {{ form.as_p }}
 
                             {% if object %}
-                                <button type="submit" class="btn btn-success">Сохранить</button>
+                                <button type="submit" class="btn btn-sm btn-success">Сохранить</button>
                             {% else %}
-                                <button type="submit" class="btn btn-success">Создать</button>
+                                <button type="submit" class="btn btn-sm btn-success">Создать</button>
                             {% endif %}
 
-                        <a href="{% url 'blog:list' %}" class="p-2 btn btn-primary">Отмена</a>
+                        <a href="{% url 'mailings:mailing_list' %}" class="btn btn-sm btn-primary">Отмена</a>
                     </form>
                 </div>
             </div>

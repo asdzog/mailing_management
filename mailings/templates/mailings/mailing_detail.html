@@ -1,10 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'mailings/base.html' %}
 
-</body>
-</html>
+{% block title %} Подробности рассылки {% endblock %}
+
+{% block content %}
+
+<p> Описание рассылки </p>
+<h1>Название: {{ mailing.title }}</h1>
+<p>Периодичность: {{ mailing.period }}</p>
+<p>Статус: {{ mailing.status }}</p>
+<p>Сообщение: {{ mailing.message }} ₽</p>
+<p>Добавлена: {{ mailing.date }}, {{ mailing.time }}</p>
+<p>
+    {% if mailing.is_active %}
+    <small class="text-body-secondary mb-2 mt-2">Период: {{ mailing.period }}</small>
+    {% endif %}
+</p>
+<p>{% if mailing.clients %}
+    Клиенты - {{ mailing.clients }}
+{% else %}
+    Клиенты отсутствуют
+{% endif %}
+</p>
+<a  class="btn btn-sm btn-danger"
+        href="{% url 'mailings:mailing_delete' object.pk %}"> Удалить рассылку </a>
+<a  class="btn btn-sm btn-success"
+        href="{% url 'mailings:mailing_list' %}"> К списку рассылок </a>
+{% endblock %}
