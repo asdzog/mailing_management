@@ -13,13 +13,16 @@
         <a class="nav-link" href="{% url 'mailings:home' %}"> Главная </a>
       </li>
       <li class="nav-item">
+        <a class="nav-link" href="{% url 'clients:client_list' %}"> Клиенты </a>
+      </li>
+      <li class="nav-item">
         <a class="nav-link" href="{% url 'mailings:message_list' %}"> Письма </a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="{% url 'mailings:mailing_list' %}"> Рассылки </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'clients:client_list' %}"> Клиенты </a>
+        <a class="nav-link" href="{% url 'mailings:mailinglog_list' %}"> Логи рассылок </a>
       </li>
     </ul>
     <form class="form-inline my-2 my-lg-0">

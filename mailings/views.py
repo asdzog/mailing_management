@@ -38,7 +38,7 @@ class MailingListView(ListView):
 
     def get_queryset(self, *args, **kwargs):
         queryset = super().get_queryset(*args, **kwargs)
-        queryset = queryset.filter(is_active=True)
+        # queryset = queryset.filter(is_active=True)
         return queryset
 
 
@@ -111,3 +111,14 @@ class MessageDeleteView(DeleteView):
 
 class MessageDetailView(DetailView):
     model = Message
+
+
+class MailingLogListView(ListView):
+    model = MailingLog
+    extra_context = {
+        'title': 'Логи рассылок'
+    }
+
+    def get_queryset(self, *args, **kwargs):
+        queryset = super().get_queryset(*args, **kwargs)
+        return queryset
