@@ -1,46 +1,77 @@
+from calendar import calendar
+from datetime import timezone, datetime, timedelta
+from smtplib import SMTPException
+
+from django.conf import settings
+from django.core.mail import send_mail
 from django.core.management.base import BaseCommand
-from mailings.models import Mailing
-from mailings.services import send_mailing_emails
-from django_crontab import crontab
+
+from mailings.models import Mailing, MailingLog
 
 
 class Command(BaseCommand):
     help = 'Send mailing emails'
 
-    def handle(self, *args, **options):
-        # send mailings from console by requesting mailing ID
-        mailing_id = input("Введите ID рассылки: ")
-        try:
-            mailing = Mailing.objects.get(pk=int(mailing_id), is_active=True)
-            success = send_mailing_emails(mailing)
-            if success:
-                self.stdout.write(self.style.SUCCESS('Рассылка успешно отправлена'))
-            else:
-                self.stderr.write(self.style.ERROR('Ошибка при отправке рассылки. Подробности см. в лог-файле'))
-                # Вывод содержимого лог-файла для получения подробностей об ошибке
-                with open('mailing_log.txt', 'r') as log_file:
-                    print(log_file.read())
-        except Mailing.DoesNotExist:
-            self.stderr.write(self.style.ERROR('Рассылка с указанным ID не найдена'))
-        except ValueError:
-            self.stderr.write(self.style.ERROR('Некорректный ID рассылки'))
-        except Exception as e:
-            self.stderr.write(self.style.ERROR(f'Произошла ошибка: {e}'))
+    active_mailings = Mailing.objects.filter(is_active=True)
+    current_time = timezone.localtime(timezone.now())
+    now = current_time.strftime('%Y-%m-%d %H:%M')
+    for mailing in active_mailings:
+        # проверка вхождения времени рассылки в нужный интервал
+        if mailing.start_date >= current_time:
+            mailing.status = "создана"
+            mailing.save()
+        elif mailing.end_date <= current_time:
+            mailing.status = "закончена"
+            mailing.save()
+        elif mailing.start_date.strftime('%Y-%m-%d %H:%M') <= now <= mailing.end_time.strftime('%Y-%m-%d %H:%M'):
+            mailing.status = "начата"
+            mailing.save()
+            # определение периодичности рассылки
+            next_sending = mailing.next_date.strftime('%Y-%m-%d %H:%M')
+            if next_sending <= now:
+                if mailing.period == "ежедневно":
+                    mailing.next_date = current_time + timedelta(days=1)
+                    mailing.save()
+                elif mailing.period == "еженедельно":
+                    mailing.next_date = current_time + timedelta(days=7)
+                    mailing.save()
+                elif mailing.periodicity == "ежемесячно":
+                    today = datetime.today()
+                    days = calendar.monthrange(today.year, today.month)[1]
+                    mailing.next_date = current_time + timedelta(days=days)
+                    mailing.save()
+                if mailing.next_date > mailing.end_date:
+                    mailing.status = "закончена"
+                    mailing.save()
 
-        # send periodic mailings
-        periodic_mailings = Mailing.objects.filter(
-            period__in=['ежедневно', 'еженедельно',
-                        'ежемесячно'], is_active=True)
-        for mailing in periodic_mailings:
-            # checking periodicity and setting schedule for sending  mailings
-            if mailing.period == 'ежедневно':
-                crontab.every().day.do(send_mailing, mailing.id)
-            elif mailing.period == 'еженедельно':
-                crontab.every().week.do(send_mailing, mailing.id)
-            elif mailing.period == 'ежемесячно':
-                crontab.every().month.do(send_mailing, mailing.id)
-
-
-def send_mailing(mailing_id):
-    pass
-
+                status = True
+                error_message = ''
+                try:
+                    send_mail(
+                        subject=mailing.message.subject,
+                        message=mailing.message.body,
+                        from_email=settings.EMAIL_HOST_USER,
+                        recipient_list=[client.email for client in mailing.clients.all()],
+                        fail_silently=False
+                    )
+                    status = True
+                    error_message = 'OK'
+                except SMTPException as error:
+                    status = False
+                    if 'authentication failed' in str(error):
+                        error_message = 'Ошибка аутентификации в почтовом сервисе'
+                    elif 'suspicion of SPAM' in str(error):
+                        error_message = 'Подозрение на спам, сервис отклонил письмо'
+                    else:
+                        error_message = error
+                finally:
+                    log = MailingLog.objects.create(
+                        status=status,
+                        server_response=error_message,
+                        mailing=mailing,
+                        owner=mailing.owner
+                    )
+                    log.save()
+            elif mailing.next_date >= mailing.end_date:
+                mailing.status = "закончена"
+                mailing.save()
