@@ -119,7 +119,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'ru-ru'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Astrakhan'
 
 USE_I18N = True
 
@@ -161,7 +161,7 @@ CRONJOBS = [
     ('*/5 * * * *', "mailings.cron.get_mailings"),
     # вывод результата выполнения запуска рассылок в указанный файл
     # (он будет создан автоматически, если путь или файл не существует)
-    ('*/1 * * * *', "mailings.cron.get_mailings", '>> mailings_log.txt')
+    ('*/5 * * * *', "mailings.cron.get_mailings", '>> mailings_log.txt')
 ]
 
 CACHE_ENABLED = os.getenv('CACHE_ENABLED') == 'True'
