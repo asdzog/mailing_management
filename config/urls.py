@@ -25,6 +25,7 @@ urlpatterns = [
     path('', include('mailings.urls', namespace='mailings')),
     path('clients/', include('clients.urls', namespace='clients')),
     path('users/', include('users.urls', namespace='users')),
+    path('blog/', include('blog.urls', namespace='blog')),
 ]
 
 if settings.DEBUG:
