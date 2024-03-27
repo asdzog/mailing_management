@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
-from clients.models import Client
+from clients.models import Client, NULLABLE
 
 
 class Message(models.Model):
@@ -21,7 +21,6 @@ class Message(models.Model):
 class Mailing(models.Model):
 
     PERIOD_CHOICES = [
-        ('разовая', 'разовая'),
         ('ежедневно', 'ежедневно'),
         ('еженедельно', 'еженедельно'),
         ('ежемесячно', 'ежемесячно'),
@@ -36,6 +35,7 @@ class Mailing(models.Model):
     title = models.CharField(max_length=50, verbose_name='Название')
     start_date = models.DateTimeField(default=timezone.now, verbose_name='Дата начала рассылки')
     end_date = models.DateTimeField(default=timezone.now, verbose_name='Дата окончания рассылки')
+    next_date = models.DateTimeField(**NULLABLE, verbose_name='Дата следующей рассылки')
     period = models.CharField(max_length=30, verbose_name='Период', choices=PERIOD_CHOICES, default='еженедельно')
     status = models.CharField(max_length=10, verbose_name='Статус', choices=STATUS_CHOICES, default='создана')
     clients = models.ManyToManyField(Client, verbose_name='Клиент')
