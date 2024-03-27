@@ -1,0 +1,26 @@
+{% extends 'mailings/base.html' %}
+{% load blog_tag %}
+{% block title %} Блог {% endblock %}
+{% block content %}
+{% for object in object_list %}
+<div class="col-12 mt-3">
+    <h4> Пост № {{ object.id }}. "{{ object.title }}"</h4>
+    <img src="{{ object.preview|my_media }}" alt="{{ object.title }}"
+         class="img-fluid" width="300px" height="200px">
+    <br>
+    <p>{{ object.content }}</p>
+    <p>Добавлен: {{ object.date_published }}</p>
+    <p>Просмотры: {{ object.views_count }}</p>
+    <p>Превью: {{ object.preview }}</p>
+    <a  class="btn btn-success"
+        href="{% url 'blog:post_view' object.pk %}"> Просмотр поста </a>
+    <a class="p-2 btn btn-warning"
+       href="{% url 'blog:post_edit' object.pk %}"> Изменить пост </a>
+    <a class="p-2 btn btn-danger"
+       href="{% url 'blog:post_delete' object.pk %}"> Удалить пост </a>
+</div>
+{% endfor %}
+<div class="text-align: center">
+    <a  class="btn btn-primary mb-3" href="{% url 'blog:post_create' %}"> Добавить статью </a>
+</div>
+{% endblock %}

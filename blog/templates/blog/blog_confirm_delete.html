@@ -1,0 +1,19 @@
+{% extends 'mailings/base.html' %}
+{% block title %} Удаление статьи {% endblock %}
+{% block content %}
+<form class="mt-3" method="post" enctype="multipart/form-data">
+    <div class="col-6">
+        <div class="card">
+            <div class="card-header">
+                Удаление статьи
+            </div>
+            <div class="card-body">
+                {% csrf_token %}
+                <p> Действительно хотите удалить пост "{{ object.title }}"?</p>
+                <button type="submit" class="p-2 btn btn-danger"> Удалить </button>
+                <a href="{% url 'blog:blog_view' %}" class="p-2 btn btn-primary"> Отмена </a>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}
