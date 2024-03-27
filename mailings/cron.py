@@ -13,7 +13,7 @@ def get_mailings():
     current_time = timezone.localtime(timezone.now())
     now = current_time.strftime('%Y-%m-%d %H:%M')
     for mailing in active_mailings:
-        # Проверяем, находится ли время рассылки в заданном интервале
+        # проверка вхождения времени рассылки в нужный интервал
         if mailing.start_date >= current_time:
             mailing.status = "создана"
             mailing.save()
@@ -23,21 +23,21 @@ def get_mailings():
         elif mailing.start_date.strftime('%Y-%m-%d %H:%M') <= now <= mailing.end_time.strftime('%Y-%m-%d %H:%M'):
             mailing.status = "начата"
             mailing.save()
-            # Определяем периодичность рассылки
-            next_sending = mailing.next_send.strftime('%Y-%m-%d %H:%M')
+            # определение периодичности рассылки
+            next_sending = mailing.next_date.strftime('%Y-%m-%d %H:%M')
             if next_sending <= now:
                 if mailing.period == "ежедневно":
                     mailing.next_date = current_time + timedelta(days=1)
                     mailing.save()
                 elif mailing.period == "еженедельно":
-                    mailing.next_send = current_time + timedelta(days=7)
+                    mailing.next_date = current_time + timedelta(days=7)
                     mailing.save()
                 elif mailing.periodicity == "ежемесячно":
                     today = datetime.today()
                     days = calendar.monthrange(today.year, today.month)[1]
                     mailing.next_date = current_time + timedelta(days=days)
                     mailing.save()
-                if mailing.next_send > mailing.end_date:
+                if mailing.next_date > mailing.end_date:
                     mailing.status = "закончена"
                     mailing.save()
 
@@ -69,6 +69,6 @@ def get_mailings():
                         owner=mailing.owner
                     )
                     log.save()
-            elif mailing.next_send >= mailing.end_time:
+            elif mailing.next_date >= mailing.end_date:
                 mailing.status = "закончена"
                 mailing.save()
