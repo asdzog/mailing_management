@@ -1,8 +1,12 @@
+from random import random, shuffle
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, CreateView, ListView, UpdateView, DeleteView, DetailView
 
+from blog.models import Post
+from clients.models import Client
 from mailings.forms import MailingForm, MessageForm
 from mailings.models import Message, Mailing, MailingLog
+from mailings.utils import get_cached_all_mailings, get_cached_active_mailings
 
 
 # Create your views here.
@@ -12,6 +16,16 @@ class HomeView(TemplateView):
     extra_context = {
         'title': 'Главная страница сервиса рассылок'
     }
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data['mailings_count'] = get_cached_all_mailings()
+        context_data['active_mailings_count'] = get_cached_active_mailings()
+        blog_list = list(Post.objects.all())
+        shuffle(blog_list)
+        context_data['blog_list'] = blog_list[:3]
+        context_data['clients_count'] = len(Client.objects.all())
+        return context_data
 
 
 class MailingCreateView(CreateView):
@@ -25,6 +39,7 @@ class MailingCreateView(CreateView):
     def form_valid(self, form):
         if form.is_valid():
             new_mailing = form.save()
+            new_mailing.owner = self.request.user
             new_mailing.save()
 
         return super().form_valid(form)
@@ -35,11 +50,6 @@ class MailingListView(ListView):
     extra_context = {
         'title': 'Рассылки'
     }
-
-    def get_queryset(self, *args, **kwargs):
-        queryset = super().get_queryset(*args, **kwargs)
-        # queryset = queryset.filter(is_active=True)
-        return queryset
 
 
 class MailingUpdateView(UpdateView):
@@ -75,6 +85,7 @@ class MessageCreateView(CreateView):
     def form_valid(self, form):
         if form.is_valid():
             new_email = form.save()
+            new_email.owner = self.request.user
             new_email.save()
 
         return super().form_valid(form)
