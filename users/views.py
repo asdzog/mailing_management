@@ -21,7 +21,7 @@ class UserLoginView(LoginView):
 
 class UserLogoutView(LogoutView):
     model = User
-    success_url = reverse_lazy('mailings:home')
+    success_url = reverse_lazy('users:login')
 
 
 class RegisterView(CreateView):

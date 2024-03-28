@@ -1,7 +1,5 @@
 {% extends 'mailings/base.html' %}
-
 {% block title %} Список клиентов {% endblock %}
-
 {% block content %}
 <div class="header mx-auto text-center">
     <h5 class="display-4">{{ title }}</h5>
@@ -17,6 +15,7 @@
                 <div class="card-header">
                     <h4 class="my-0 font-weight-normal"> Клиент {{ object.full_name }}</h4>
                     <p>Email: {{ object.email }} </p>
+                    <p>Владелец: {{ object.owner }} </p>
                     <a href="{% url 'clients:client_detail' object.pk %}" type="button"
                        class="btn btn-sm btn-primary "> Подробнее </a>
                     <a href="{% url 'clients:client_update' object.pk %}" type="button"
@@ -27,17 +26,6 @@
             </div>
             {% endfor %}
         </div>
-            <!--
-                        <div class="card-footer">
-                            {% if object.is_activated %}
-                            <p>Действующая</p>
-                            {% else %}
-                            <p>Отменена</p>
-                            {% endif %}
-                        </div>
-            -->
-
-
     </div>
 </div>
 {% endblock %}
