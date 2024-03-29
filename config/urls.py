@@ -24,8 +24,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('mailings.urls', namespace='mailings')),
     path('clients/', include('clients.urls', namespace='clients')),
+    path('users/', include('users.urls', namespace='users')),
 ]
 
 if settings.DEBUG:
     urlpatterns += (static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
                     + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT))
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

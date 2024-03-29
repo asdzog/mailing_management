@@ -42,10 +42,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'django_crontab',
+
     'clients',
     'mailings',
 
     'users',
+    'blog'
 ]
 
 MIDDLEWARE = [
@@ -63,7 +66,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -116,7 +119,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'ru-ru'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Astrakhan'
 
 USE_I18N = True
 
@@ -149,6 +152,17 @@ EMAIL_PORT = int(os.getenv('EMAIL_PORT'))
 EMAIL_USE_SSL = os.getenv('EMAIL_USE_SSL') == 'True'
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+
+ADM_EMAIL = os.getenv('ADM_EMAIL')
+ADM_PSW = os.getenv('ADM_PSW')
+
+CRONJOBS = [
+    # функция запуска рассылок выполняется каждые 5 минут
+    ('*/5 * * * *', "mailings.cron.get_mailings"),
+    # вывод результата выполнения запуска рассылок в указанный файл
+    # (он будет создан автоматически, если путь или файл не существует)
+    ('*/5 * * * *', "mailings.cron.get_mailings", '>> mailings_log.txt')
+]
 
 CACHE_ENABLED = os.getenv('CACHE_ENABLED') == 'True'
 CACHES = {

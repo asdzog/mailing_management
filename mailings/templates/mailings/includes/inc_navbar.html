@@ -1,5 +1,8 @@
+{% load static %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="#">Ваш логотип</a>
+<a class="navbar-brand"> <!-- href="mailings:home" -->
+  <img src="{% static 'img/logo.png' %}" alt="Логотип">
+</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -10,14 +13,29 @@
         <a class="nav-link" href="{% url 'mailings:home' %}"> Главная </a>
       </li>
       <li class="nav-item">
+        <a class="nav-link" href="{% url 'clients:client_list' %}"> Клиенты </a>
+      </li>
+      <li class="nav-item">
         <a class="nav-link" href="{% url 'mailings:message_list' %}"> Письма </a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="{% url 'mailings:mailing_list' %}"> Рассылки </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'clients:client_list' %}"> Клиенты </a>
+        <a class="nav-link" href="{% url 'mailings:mailinglog_list' %}"> Логи рассылок </a>
       </li>
+      {% if user.is_authenticated %}
+      <li class="nav-item">
+         <a class="nav-link" href="{% url 'users:logout' %}"> Выйти </a>
+       </li>
+      {% else %}
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'users:login' %}"> Войти </a>
+      </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'users:register' %}"> Регистрация </a>
+        </li>
+       {% endif %}
     </ul>
     <form class="form-inline my-2 my-lg-0">
       <input class="form-control mr-sm-2" type="search" placeholder="Поиск" aria-label="Search">

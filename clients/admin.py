@@ -1,3 +1,9 @@
 from django.contrib import admin
+from .models import Client
 
-# Register your models here.
+
+@admin.register(Client)
+class ClientAdmin(admin.ModelAdmin):
+    list_display = ('id', 'full_name', 'email', 'owner',)
+    list_filter = ('full_name', 'email', 'owner',)
+    search_fields = ('full_name', 'email', )
