@@ -3,7 +3,7 @@ from django.contrib.auth import login
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import LoginView, LogoutView
 from django.core.mail import send_mail
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -82,3 +82,16 @@ class RegisterFailView(View):
 
 class RegisterSuccessView(TemplateView):
     template_name = 'users/succeeded_register.html'
+
+
+def generate_new_psw(request):
+    new_password = User.objects.make_random_password()
+    send_mail(
+        subject='Вы успешно сменили пароль',
+        message=f'Ваш новый пароль: {new_password}',
+        from_email=settings.EMAIL_HOST_USER,
+        recipient_list=[request.user.email]
+    )
+    request.user.set_password(new_password)
+    request.user.save()
+    return render(request, 'users/password_changed.html')

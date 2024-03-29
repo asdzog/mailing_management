@@ -2,7 +2,7 @@ from django.urls import path
 
 from users.apps import UsersConfig
 from users.views import UserLoginView, RegisterView, UserConfirmEmailView, RegisterFailView, RegisterSuccessView, \
-    UserLogoutView, EmailConfirmView
+    UserLogoutView, EmailConfirmView, generate_new_psw
 
 app_name = UsersConfig.name
 
@@ -14,5 +14,5 @@ urlpatterns = [
     path('confirm_email/<str:uidb64>/<str:token>/', UserConfirmEmailView.as_view(), name='confirm_email'),
     path('failed_register/', RegisterFailView.as_view(), name='failed_register'),
     path('succeeded_register/', RegisterSuccessView.as_view(), name='succeeded_register'),
-
+    path('generate_new_psw/', generate_new_psw, name='generate_new_psw'),
 ]
