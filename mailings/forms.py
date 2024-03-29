@@ -8,18 +8,18 @@ class MailingForm(StyleFormMixin, ModelForm):
 
     class Meta:
         model = Mailing
-        fields = '__all__'
+        exclude = ('owner',)
 
 
 class MessageForm(StyleFormMixin, ModelForm):
 
     class Meta:
         model = Message
-        fields = '__all__'
+        exclude = ('owner',)
 
 
 class MailingLogForm(StyleFormMixin, ModelForm):
 
     class Meta:
         model = MailingLog
-        fields = '__all__'
+        exclude = ('owner',)

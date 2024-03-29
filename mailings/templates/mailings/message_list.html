@@ -13,9 +13,10 @@
         <div class="col-6 mb-3">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="my-0 font-weight-normal"> Письмо (ID № {{ object.pk }})</h3>
-                    <p>Тема письма: {{ object.subject }}</p>
-                    <p>Содержание письма: {{ object.body }}</p>
+                    <h3 class="my-0 font-weight-normal"> Письмо № {{ object.pk }}</h3>
+                    <p>Тема письма: {{ object.subject }}<br>
+                    Содержание письма: {{ object.body }}<br>
+                    Отправитель: {{ object.owner }}</p>
                 </div>
                 <div class="d-flex justify-content-between align-items-center">
                     <a href="{% url 'mailings:message_detail' object.pk %}" type="button"

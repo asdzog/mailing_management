@@ -3,17 +3,66 @@
 {% block title %} Система рассылки сообщений {% endblock %}
 
 {% block content %}
-    <h1><em>Главная страница с рассылками </em></h1>
-    <div class="row">
-                <a class="col-4 mt-3 mb-3 btn btn-primary"
-                   href="{% url 'mailings:mailing_create' %}">Добавить рассылку</a>
-            </div>
-        <!--  {% if user.is_authenticated %}  -->
+<h1><em>Главная страница с рассылками </em></h1>
+<div class="row">
+    <a class="col-4 mt-3 mb-3 btn btn-primary"
+       href="{% url 'mailings:mailing_create' %}">Добавить рассылку</a>
+</div>
+<h4>Статья № {{ post_list }}. "{{ post.title }}"</h4>
+{% if user.is_authenticated %}
+{% for post in post_list %}
+<div class="col-12 mt-3">
+    <h4>Статья № {{ post.id }}. "{{ post.title }}"</h4>
+    <img src="{{ object.preview }}" alt="{{ object.title }}"
+         class="img-fluid" width="300px" height="200px">
+    <br>
+    <p>{{ post.content }}</p>
 
-        <!--  {% endif %}  -->
+
+    {% endfor %}
+
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th><h4>Всего рассылок</h4></th>
+            <th><h4>Активных рассылок</h4></th>
+            <th><h4>Уникальных клиентов</h4></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td><h4>{{ mailings_count }}</h4></td>
+            <td><h4>{{ active_mailings_count }}</h4></td>
+            <td><h4>{{ clients_count }}</h4></td>
+        </tr>
+        </tbody>
+    </table>
+
+    {% for post in blog_list %}
+
+    <div class="col">
+        <div class="card h-100">
+            <img src="#" class="card-img-top" alt="{{ post_image }}">
+            <div class="card-body">
+                <h5 class="card-title">{{ post.title|title }}</h5>
+                <p class="card-text">{{ post.description|truncatechars:100 }}</p>
+                <p>Добавлен: {{ post.date_published }}</p>
+                <p>Просмотры: {{ post.views_count }}</p>
+            </div>
+            <div class="card-footer">
+                <a href="{% url 'blog:post_view' post.pk %}" class="btn btn-primary">Подробнее</a>
+            </div>
+        </div>
+    </div>
+
+    {% endfor %}
+
+
+    {% endif %}
     <div class="row">
         {% for product in products %}
-            <!-- {% include 'catalog/includes/inc_product_card.html' %} -->
+        <!-- {% include 'catalog/includes/inc_product_card.html' %} -->
         {% endfor %}
     </div>
-{% endblock %}
+    {% endblock %}
