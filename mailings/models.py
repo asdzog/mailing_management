@@ -65,6 +65,8 @@ class MailingLog(models.Model):
     response = models.TextField(max_length=200, verbose_name='Ответ сервера')
     mailing = models.ForeignKey(Mailing, on_delete=models.CASCADE, verbose_name='Рассылка')
 
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, **NULLABLE, on_delete=models.SET_NULL, verbose_name='Владелец')
+
     def __str__(self):
         return f'Отправка {self.datetime}: {self.status}'
 
