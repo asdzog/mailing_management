@@ -1,7 +1,7 @@
 from calendar import calendar
-from datetime import timezone, timedelta, datetime
+from datetime import timedelta, datetime
 from smtplib import SMTPException
-
+from django.utils import timezone
 from django.conf import settings
 from django.core.mail import send_mail
 
@@ -20,7 +20,7 @@ def get_mailings():
         elif mailing.end_date <= current_time:
             mailing.status = "закончена"
             mailing.save()
-        elif mailing.start_date.strftime('%Y-%m-%d %H:%M') <= now <= mailing.end_time.strftime('%Y-%m-%d %H:%M'):
+        elif mailing.start_date.strftime('%Y-%m-%d %H:%M') <= now <= mailing.end_date.strftime('%Y-%m-%d %H:%M'):
             mailing.status = "начата"
             mailing.save()
             # определение периодичности рассылки
@@ -32,7 +32,7 @@ def get_mailings():
                 elif mailing.period == "еженедельно":
                     mailing.next_date = current_time + timedelta(days=7)
                     mailing.save()
-                elif mailing.periodicity == "ежемесячно":
+                elif mailing.period == "ежемесячно":
                     today = datetime.today()
                     days = calendar.monthrange(today.year, today.month)[1]
                     mailing.next_date = current_time + timedelta(days=days)
@@ -64,7 +64,7 @@ def get_mailings():
                 finally:
                     log = MailingLog.objects.create(
                         status=status,
-                        server_response=error_message,
+                        response=error_message,
                         mailing=mailing,
                         owner=mailing.owner
                     )
